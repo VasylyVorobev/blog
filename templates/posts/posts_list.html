@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {{ block.super }}
+{% endblock %}
+
+{% block content %}
+  <!-- Page Content -->
+  <div class="container">
+
+    <div class="row">
+
+      <!-- Blog Entries Column -->
+      <div class="col-md-8">
+
+        <h1 class="my-4">Новости
+
+        </h1>
+
+        <!-- Blog Post -->
+          {% if messages %}
+              {% for m in messages %}
+                  <p class="alert alert-success">{{ m }}</p>
+              {% endfor %}
+          {% endif %}
+          {% for vac in object_list %}
+
+            <div class="card mb-4">
+              <img class="card-img-top" src="{{ vac.img.url }}" alt="Card image cap" height="300" width="400">
+              <div class="card-body">
+                <h2 class="card-title">{{ vac.title }}</h2>
+                <p class="card-text">{{ vac.description|truncatewords:20 }}</p>
+                <a href="{{ vac.get_absolute_url }}" class="btn btn-primary">Читать далее &rarr;</a>
+              </div>
+              <div class="card-footer text-muted">
+                Размещено {{ vac.created }}, пользователем
+                  {{ vac.user.username|title }}
+              </div>
+            </div>
+
+          {% endfor %}
+        <!-- Pagination -->
+
+        <ul class="pagination justify-content-center mb-4">
+            {% if page_obj.has_previous %}
+                <li class="page-item">
+                 <a class="page-link" href="?page={{ page_obj.previous_page_number }}">&larr; Пред</a>
+                </li>
+            {% endif %}
+            {% if page_obj.has_next %}
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}">След &rarr;</a>
+            {% endif %}
+        </ul>
+
+      </div>
+
+      <!-- Sidebar Widgets Column -->
+      <div class="col-md-4">
+
+        <!-- Search Widget -->
+        <div class="card my-4">
+          <h5 class="card-header">Search</h5>
+          <div class="card-body">
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="Search for...">
+              <span class="input-group-append">
+                <button class="btn btn-secondary" type="button">Go!</button>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Categories Widget -->
+        <div class="card my-4">
+          <h5 class="card-header">Категории</h5>
+          <div class="card-body">
+            <div class="row">
+                <ul class="list-unstyled mb-0">
+                    {% for cat in category %}
+                        <li>
+                            <a href="{% url 'posts:category_list_url' cat.id %}">{{ cat }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Side Widget -->
+        <div class="card my-4">
+          <h5 class="card-header">Side Widget</h5>
+          <div class="card-body">
+              <a href="{% url 'posts:post_create_url' %}" class="btn btn-primary">Создать пост</a>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+    <!-- /.row -->
+
+  </div>
+  <!-- /.container -->
+
+  <!-- Footer -->
+
+
+{% endblock %}
